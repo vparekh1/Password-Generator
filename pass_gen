@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+
+from random import choice, seed
+from os import urandom
+from math import log, floor
+from sys import argv
+from re import compile, match
+
+# use this regex to remove similar words ending in ing/ed/es
+# such as walking and walked
+regex = compile('^.*(ing|ed|es)$')
+
+dictionary = open('wordlist.txt', 'r')
+words = [x.strip() for x in dictionary if not regex.match(x)]
+
+print("Strength of password: " + str(log(len(words), 2))[:5] + " bytes per word (" + str(len(words)) + " possibilities)")
+
+# A second argument may be added to pass_gen to specify the number of words to be
+# generated
+passnums = 4 if len(argv)<2 else argv[1]  # set default number of passwords to 4
+for x in range(int(passnums)):
+        seed(urandom(256))
+        passwordword = choice(words)
+        print(passwordword + 
+                " "*(12-len(passwordword)) + 
+                str(log(len(words)**(x+1),2))[:5] + 
+                " bytes (" + 
+                str(len(words)**(x+1))[:1] + "." + str(len(words)**(x+1))[1:3] + 
+                " x 10^" + 
+                str(int(floor(log(len(words)**(x+1),10)))) + " possibilities)")
