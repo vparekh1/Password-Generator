@@ -12,12 +12,13 @@ regex = compile('^.*(ing|ed|es)$')
 
 dictionary = open('wordlist.txt', 'r')
 words = [x.strip() for x in dictionary if not regex.match(x)]
+passnums = 4 if len(argv)<2 else int(argv[1])  # set default number of passwords to 4
 
-print("Strength of password: " + str(log(len(words), 2))[:5] + " bytes per word (" + str(len(words)) + " possibilities)")
-
+print("Strength of dictionary: " + str(log(len(words), 2))[:5] + " bytes per word (" + str(len(words)) + " possibilities)")
+print("Strength of password: " + str(log(len(words), 2)*passnums)[:5] + " bytes")
 # A second argument may be added to pass_gen to specify the number of words to be
 # generated
-passnums = 4 if len(argv)<2 else argv[1]  # set default number of passwords to 4
+
 for x in range(int(passnums)):
         seed(urandom(256))
         passwordword = choice(words)
